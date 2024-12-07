@@ -107,14 +107,14 @@ def process_schedules(processing_time,quantity):
     return schedules
 
 def main():
-    file_path = "C:/Users/csuser/Desktop/Milestones/Input/Input/Milestone2a.json"
+    file_path = "C:/Users/csuser/Desktop/Milestones/Input/Input/Milestone2b.json"
     json_data = read_file(file_path)
     rangemin,rangemax,dependency = steps_parser(json_data)
     machines_id,steps_id,cooldown_time,init_param,fluctuation,number_of_wafer = machines_parser(json_data)
     wafer_type,processing_time,quantity = wafer_parser(json_data)
     schedules = process_schedules(processing_time,quantity)
 
-    with open('output2a.json','w') as file:
+    with open('output2b.json','w') as file:
         json.dump(schedules,file)
 
 main()
