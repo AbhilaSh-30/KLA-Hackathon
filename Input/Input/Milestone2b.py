@@ -81,7 +81,7 @@ def process_schedules(processing_time,quantity):
             P2.append({"wafer_id":f"W2-{i}","step":"S1","machine":"M2","start_time":start_time_m2,"end_time":end_time_m2})
             end_time_m3 = start_time_m3 + w2_s2_time
             P3.append({"wafer_id":f"W2-{i+1}","step":"S2","machine":"M3","start_time":start_time_m3,"end_time":end_time_m3})
-            if(i != w1_quan):
+            if(i <= w1_quan):
                 end_time_m4 = start_time_m4 + w1_s2_time
                 P4.append({"wafer_id":f"W1-{i+1}","step":"S2","machine":"M4","start_time":start_time_m4,"end_time":end_time_m4})
         if(i%2 == 0):
@@ -92,15 +92,16 @@ def process_schedules(processing_time,quantity):
             P2.append({"wafer_id":f"W2-{i}","step":"S1","machine":"M2","start_time":start_time_m2,"end_time":end_time_m2})
             end_time_m3 = start_time_m3 + w2_s2_time
             P3.append({"wafer_id":f"W2-{i-1}","step":"S2","machine":"M3","start_time":start_time_m3,"end_time":end_time_m3})
-            end_time_m4 = start_time_m4 + w1_s2_time
-            P4.append({"wafer_id":f"W1-{i-1}","step":"S2","machine":"M4","start_time":start_time_m4,"end_time":end_time_m4})
+            if(i<=w1_quan):
+                end_time_m4 = start_time_m4 + w1_s2_time
+                P4.append({"wafer_id":f"W1-{i-1}","step":"S2","machine":"M4","start_time":start_time_m4,"end_time":end_time_m4})
         start_time_m4 = start_time_m3 = start_time_m2 = start_time_m1 = max(end_time_m4,end_time_m3,end_time_m1,end_time_m2)
     for i in range(max_len):
         if(i<=w1_quan-1):
             sch.append(P1[i])
         sch.append(P2[i])
         sch.append(P3[i])
-        if(i!=w1_quan):
+        if(i<=w1_quan-1):
             sch.append(P4[i])
     print(sch)
     schedules = {"schedule" : sch}
