@@ -28,6 +28,7 @@ def machines_parser(json_data):
     init_param = []
     fluctuation = []
     number_of_wafer = []
+    machines = []
     for i in range(len(machines_dict)):
         machines_id.append(machines_dict[i]['machine_id'])
         steps_id.append(machines_dict[i]['step_id'])
@@ -53,34 +54,45 @@ def wafer_parser(json_data):
 def process_schedules(processing_time,quantity):
     start_time_m1 = 0
     start_time_m2 = 0
+    start_time_m3 = 0
     s1_time = processing_time[0]
     s2_time = processing_time[1]
     P1 = []
     P2 = []
+    P3 = []
     sch = []
     schedules = {}
-    length = int(quantity[0])
+    length1 = int(quantity[0])
+    length2 = length1 - 1
     for i in range(int(quantity[0])):
         end_time_m1 = start_time_m1 + s1_time
         P1.append({"wafer_id":f"W1-{i+1}","step":"S1","machine":"M1","start_time":start_time_m1,"end_time":end_time_m1})
-        end_time_m2 = start_time_m2 + s2_time
-        P2.append({"wafer_id":f"W1-{length}","step":"S2","machine":"M2","start_time":start_time_m2,"end_time":end_time_m2})
+        if(length2 >=1):
+            end_time_m2 = start_time_m2 + s2_time
+            P2.append({"wafer_id":f"W1-{length2}","step":"S2","machine":"M2","start_time":start_time_m2,"end_time":end_time_m2})
+        if(length1 == 3):
+            end_time_m3 = start_time_m3 + s2_time
+            P3.append({"wafer_id":f"W1-{length1}","step":"S2","machine":"M3","start_time":start_time_m3,"end_time":end_time_m3})
         start_time_m2 = start_time_m1 = end_time_m2
-        length-=1
+        length2-=1
+        length1-=1
     for i in range(len(P1)):
         sch.append(P1[i])
-        sch.append(P2[i])
+        if(i <=1):
+            sch.append(P2[i])
+        if(i <=0):
+            sch.append(P3[i])
     schedules = {"schedule" : sch}
     return schedules
 
 def main():
-    file_path = "C:/Users/csuser/Desktop/Milestones/Input/Input/Milestone0.json"
+    file_path = "C:/Users/csuser/Desktop/Milestones/Input/Input/Milestone1.json"
     json_data = read_file(file_path)
     rangemin,rangemax,dependency = steps_parser(json_data)
     machines_id,steps_id,cooldown_time,init_param,fluctuation,number_of_wafer = machines_parser(json_data)
     wafer_type,processing_time,quantity = wafer_parser(json_data)
     schedules = process_schedules(processing_time,quantity)
-    with open('output0.json','w') as file:
+    with open('output1.json','w') as file:
         json.dump(schedules,file)
 
 main()
